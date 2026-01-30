@@ -1,0 +1,128 @@
+---
+title: "Low-Light Image Enhancer Web App"
+publishedAt: "2024-11-20"
+summary: "A full-stack web application that enhances low-light images using a pre-trained MIRNet deep learning model deployed via Flask API with a React frontend."
+images:
+  - "/images/projects/image-enhancer/cover-01.jpg"
+  - "/images/projects/image-enhancer/cover-02.jpg"
+team:
+   - name: "Muhammad Shahzeb"
+      role: "Full-Stack Developer"
+      avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/muhammad-shahzeb-cs"
+---
+
+## Overview
+
+The Low-Light Image Enhancer is a web application that leverages deep learning to automatically enhance images captured in low-light conditions. Built with a Flask backend serving a PyTorch-based MIRNet model and a responsive React frontend, this project demonstrates end-to-end AI model deployment.
+
+## Problem & Solution
+
+Low-light photography often results in images with poor visibility, noise, and color distortion. This application provides an easy-to-use interface where users can upload low-light images and receive enhanced versions with improved brightness, contrast, and detail preservation.
+
+## Technical Architecture
+
+### Backend (Flask API)
+
+```python
+# Flask endpoint serving MIRNet model
+@app.route('/enhance', methods=['POST'])
+def enhance_image():
+    image = request.files['image']
+    enhanced = mirnet_model.predict(image)
+    return send_enhanced_image(enhanced)
+```
+
+- **Model**: Pre-trained MIRNet (Multi-scale Illumination Refinement Network)
+- **Framework**: PyTorch for model inference
+- **API**: RESTful Flask API with image upload/download endpoints
+- **Preprocessing**: Image normalization and tensor conversion
+- **Postprocessing**: Denormalization and format conversion
+
+### Frontend (React)
+
+- **File Upload**: Drag-and-drop interface for image uploads
+- **Image Preview**: Before/after comparison view
+- **Processing Status**: Loading indicators and progress feedback
+- **Responsive Design**: Mobile-friendly interface
+- **API Integration**: Axios for HTTP requests to Flask backend
+
+## Implementation Journey
+
+### Initial Attempt: Zero-DCE
+
+Initially attempted to implement Zero-DCE (Zero-Reference Deep Curve Estimation), a lightweight model for low-light enhancement. After several implementation challenges including:
+
+- Model convergence issues
+- Integration complexities
+- Performance bottlenecks
+
+Decided to pivot to a more robust solution.
+
+### Final Solution: MIRNet
+
+Transitioned to MIRNet, which provided:
+
+- Better out-of-the-box performance with pre-trained weights
+- Stable inference pipeline
+- Superior enhancement quality
+- Easier integration with Flask
+
+## Key Features
+
+- **User-Friendly Interface**: Simple drag-and-drop image upload
+- **Real-time Processing**: Fast inference with optimized model
+- **Image Comparison**: Side-by-side view of original and enhanced images
+- **Download Capability**: Export enhanced images
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+
+## Technologies Used
+
+- **Frontend**: React.js, Axios, CSS3
+- **Backend**: Flask, Python
+- **Deep Learning**: PyTorch, MIRNet
+- **Image Processing**: PIL (Python Imaging Library), NumPy
+- **Deployment**: Local development environment
+
+## Technical Challenges & Solutions
+
+1. **Model Loading Time**:
+   - Problem: Model initialization caused slow first request
+   - Solution: Implemented model preloading on server startup
+
+2. **Image Format Handling**:
+   - Problem: Various input formats (JPEG, PNG, HEIC)
+   - Solution: Added format detection and conversion
+
+3. **Memory Management**:
+   - Problem: Large images causing memory issues
+   - Solution: Implemented image resizing and batch processing
+
+4. **CORS Issues**:
+   - Problem: Cross-origin requests blocked
+   - Solution: Configured Flask-CORS properly
+
+## Learnings
+
+- **Model Deployment**: Practical experience deploying PyTorch models in production
+- **Full-Stack Integration**: Connecting React frontend with Flask backend
+- **Error Handling**: Implementing robust error handling for file uploads and processing
+- **Adaptability**: Pivoting from Zero-DCE to MIRNet based on practical constraints
+- **Performance Optimization**: Balancing model quality with inference speed
+
+## Future Enhancements
+
+- Add support for video enhancement
+- Implement batch processing for multiple images
+- Add adjustable enhancement parameters
+- Deploy to cloud platform (AWS/Vercel + Flask on Render)
+- Implement user authentication and history
+
+## Demo
+
+🔗 [GitHub Repository](#)  
+🎥 [Live Demo](#)
+
+## Impact
+
+This project demonstrates the practical application of computer vision models in real-world scenarios, bridging the gap between research and production-ready applications. It showcases skills in both AI/ML model deployment and full-stack web development.

@@ -1,0 +1,229 @@
+---
+title: "Case Management System"
+publishedAt: "2024-08-15"
+summary: "Enterprise-grade MERN stack application with role-based access control, secure authentication, and structured workflow management for case handling."
+images:
+  - "/images/projects/case-management/cover-01.jpg"
+  - "/images/projects/case-management/cover-02.jpg"
+team:
+  - name: "Muhammad Shahzeb"
+    role: "Full-Stack Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/muhammad-shahzeb-cs"
+---
+
+## Overview
+
+The Case Management System is a comprehensive enterprise application built to streamline case handling workflows, document management, and team collaboration. Developed using the MERN stack (MongoDB, Express.js, React, Node.js), it features robust authentication, role-based access control, and real-time updates.
+
+## Key Features
+
+### 1. Role-Based Access Control (RBAC)
+
+- **Admin Role**: Full system access, user management, and configuration
+- **Manager Role**: Case assignment, team oversight, and reporting
+- **Agent Role**: Case handling, documentation, and status updates
+- **Client Role**: Case submission, status tracking, and document access
+
+### 2. Case Management Workflow
+
+```javascript
+Case Lifecycle:
+New → Assigned → In Progress → Review → Resolved → Closed
+```
+
+- **Case Creation**: Structured form with validation
+- **Assignment System**: Automatic and manual case routing
+- **Status Tracking**: Real-time case status updates
+- **Priority Management**: Urgent, High, Medium, Low priority levels
+- **Activity Timeline**: Complete audit trail of case activities
+
+### 3. Document Management
+
+- **File Upload**: Support for multiple document types (PDF, DOCX, images)
+- **Version Control**: Track document revisions
+- **Secure Storage**: MongoDB GridFS for file storage
+- **Access Control**: Document-level permissions
+
+### 4. Authentication & Security
+
+- **JWT Authentication**: Secure token-based auth
+- **Password Hashing**: bcrypt for secure password storage
+- **Session Management**: Automatic token refresh
+- **Protected Routes**: Frontend and backend route protection
+- **Input Validation**: Server-side validation to prevent injection attacks
+
+## Technical Architecture
+
+### Backend (Node.js + Express)
+
+```javascript
+// Authentication middleware
+const authenticateJWT = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+```
+
+- **RESTful API**: Well-structured endpoints for all operations
+- **Mongoose ODM**: Schema definition and data validation
+- **Express Middleware**: Error handling, authentication, logging
+- **API Documentation**: Comprehensive endpoint documentation
+
+### Frontend (React)
+
+- **React Router**: Client-side routing with protected routes
+- **Context API**: Global state management for auth and user data
+- **Custom Hooks**: Reusable logic for data fetching and auth
+- **Responsive Design**: Mobile-first approach with CSS modules
+- **Form Handling**: Controlled components with validation
+- **Error Boundaries**: Graceful error handling
+
+### Database (MongoDB)
+
+```javascript
+// Case Schema
+const caseSchema = new Schema({
+  caseNumber: { type: String, unique: true, required: true },
+  title: { type: String, required: true },
+  description: String,
+  status: {
+    type: String,
+    enum: ["new", "assigned", "in-progress", "review", "resolved", "closed"],
+    default: "new",
+  },
+  priority: {
+    type: String,
+    enum: ["urgent", "high", "medium", "low"],
+    default: "medium",
+  },
+  assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
+  createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  documents: [{ type: Schema.Types.ObjectId, ref: "Document" }],
+  timeline: [timelineItemSchema],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+```
+
+## Implementation Highlights
+
+### 1. Secure Authentication Flow
+
+- User login with email/password
+- JWT token generation with user role
+- Token stored in localStorage (with httpOnly cookie option)
+- Automatic token refresh before expiry
+- Logout clears all session data
+
+### 2. Dynamic Dashboard
+
+- Role-specific dashboard views
+- Case statistics and analytics
+- Quick actions based on permissions
+- Recent activity feed
+- Performance metrics
+
+### 3. Search & Filter
+
+- Full-text search across cases
+- Multi-criteria filtering (status, priority, assignee, date range)
+- Sorting options
+- Export functionality
+
+## Technologies Used
+
+### Frontend
+
+- React.js
+- React Router
+- Axios
+- CSS Modules
+- Date-fns
+
+### Backend
+
+- Node.js
+- Express.js
+- JWT (jsonwebtoken)
+- bcrypt
+- Mongoose
+
+### Database
+
+- MongoDB
+- MongoDB GridFS (file storage)
+
+### Development Tools
+
+- Git & GitHub
+- Postman (API testing)
+- VS Code
+- ESLint & Prettier
+
+## Challenges & Solutions
+
+### Challenge 1: Role-Based Route Protection
+
+**Problem**: Ensuring users only access authorized routes
+**Solution**: Implemented HOC (Higher Order Component) for route protection with role checking
+
+### Challenge 2: File Upload Performance
+
+**Problem**: Large file uploads blocking the main thread
+**Solution**: Implemented chunked uploads with progress tracking
+
+### Challenge 3: Real-time Updates
+
+**Problem**: Users not seeing latest case updates
+**Solution**: Implemented polling mechanism (future: WebSocket for real-time sync)
+
+### Challenge 4: Complex State Management
+
+**Problem**: Prop drilling and scattered state
+**Solution**: Context API with custom hooks for cleaner state management
+
+## Key Learnings
+
+- **Enterprise Architecture**: Designing scalable, maintainable systems
+- **Security Best Practices**: Authentication, authorization, and data protection
+- **Database Design**: Schema optimization and relationship modeling
+- **API Design**: RESTful principles and consistent endpoint structure
+- **Error Handling**: Comprehensive error handling on frontend and backend
+- **Testing**: Importance of thorough testing for business-critical features
+
+## Performance Optimizations
+
+- Pagination for large datasets
+- Lazy loading of components
+- Image optimization
+- Database indexing on frequently queried fields
+- Caching frequently accessed data
+- Debouncing search inputs
+
+## Future Enhancements
+
+- Real-time notifications with Socket.io
+- Advanced reporting and analytics dashboard
+- Email notifications for case updates
+- Integration with external services (calendar, email)
+- Mobile app version
+- Automated case assignment based on workload
+
+## Demo & Code
+
+🔗 [GitHub Repository](#)  
+📈 [Screenshots](#)  
+📹 [Video Demo](#)
+
+## Impact
+
+This project demonstrates comprehensive full-stack development skills, from database design to user interface implementation. It showcases the ability to build secure, scalable enterprise applications with clean architecture and user-centric design.

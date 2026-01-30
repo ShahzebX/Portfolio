@@ -1,0 +1,80 @@
+---
+title: "Solar Panel Segmentation (Final Year Project)"
+publishedAt: "2025-09-15"
+summary: "Self-supervised computer vision for satellite image segmentation. Explored MoCo v2 and BYOL to achieve stable representation learning for solar panel detection."
+images:
+  - "/images/projects/solar-panel/cover-01.jpg"
+team:
+  - name: "Muhammad Shahzeb"
+    role: "ML Engineer & Researcher"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/muhammad-shahzeb-cs"
+---
+
+## Overview
+
+This Final Year Project tackles the challenge of automatically annotating and segmenting solar panels from satellite imagery using self-supervised learning techniques. The goal was to develop a robust computer vision system that could identify solar panel installations without requiring extensive labeled datasets.
+
+## Problem Statement
+
+Traditional supervised learning approaches for image segmentation require large amounts of labeled data, which is time-consuming and expensive to obtain. This project explores self-supervised learning methods to learn meaningful representations from unlabeled satellite imagery, which can then be fine-tuned for solar panel segmentation with minimal labeled data.
+
+## Technical Approach
+
+### Self-Supervised Learning Methods
+
+**Initial Approach: MoCo v2**
+
+- Implemented Momentum Contrast (MoCo) v2 for contrastive learning
+- Trained on unlabeled satellite imagery to learn visual representations
+- Experimented with different augmentation strategies and hyperparameters
+- Encountered challenges with convergence and representation quality
+
+**Current Approach: BYOL**
+
+- Shifted to Bootstrap Your Own Latent (BYOL) for improved stability
+- BYOL eliminates the need for negative pairs, simplifying the training process
+- Achieved significantly lower loss compared to MoCo v2
+- Currently working to improve standard deviation metrics for better representation consistency
+
+### Architecture
+
+- **Backbone**: ResNet-50 encoder
+- **SSL Framework**: BYOL with online and target networks
+- **Segmentation Head**: U-Net style decoder for pixel-level predictions
+- **Training Strategy**: Two-stage approach (SSL pretraining → supervised fine-tuning)
+
+## Key Learnings
+
+1. **Self-Supervised Learning**: Deep understanding of contrastive learning and its alternatives
+2. **Hyperparameter Tuning**: Importance of learning rate scheduling, momentum updates, and augmentation strategies
+3. **Model Evaluation**: Analyzing loss curves, feature representations, and downstream task performance
+4. **Research Methodology**: Iterating through approaches based on experimental results
+
+## Technologies Used
+
+- **PyTorch**: Deep learning framework
+- **BYOL & MoCo v2**: Self-supervised learning algorithms
+- **CNNs**: Convolutional Neural Networks for feature extraction
+- **Python**: Primary programming language
+- **Satellite Imagery**: High-resolution satellite images for training
+
+## Challenges
+
+- **MoCo v2 Performance**: Initial experiments with MoCo v2 showed unstable training and suboptimal representation learning
+- **BYOL Fine-Tuning**: While achieving low loss, working to improve feature consistency (standard deviation)
+- **Data Processing**: Handling large-scale satellite imagery and efficient data pipelines
+- **Computational Resources**: Managing GPU resources for extended training runs
+
+## Current Status
+
+The project is in active development with BYOL showing promising results. The next steps include:
+
+- Optimizing BYOL hyperparameters to improve feature diversity
+- Implementing the segmentation head and fine-tuning pipeline
+- Evaluating on labeled solar panel datasets
+- Comparing results with fully supervised baselines
+
+## Impact
+
+This project demonstrates the practical application of cutting-edge self-supervised learning techniques to real-world computer vision problems. The approach can significantly reduce the annotation burden for satellite image analysis tasks and has potential applications in renewable energy monitoring and urban planning.
