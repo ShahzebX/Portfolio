@@ -8,73 +8,79 @@ team:
   - name: "Muhammad Shahzeb"
     role: "ML Engineer & Researcher"
     avatar: "/images/avatar.png"
-    linkedIn: "https://www.linkedin.com/in/muhammad-shahzeb-cs"
+    linkedIn: "https://www.linkedin.com/in/shahzebx"
 ---
 
 ## Overview
 
-This Final Year Project tackles the challenge of automatically annotating and segmenting solar panels from satellite imagery using self-supervised learning techniques. The goal was to develop a robust computer vision system that could identify solar panel installations without requiring extensive labeled datasets.
+This Final Year Project explores **self-supervised learning (SSL)** as a practical way to segment solar panels from satellite imagery when labels are scarce. The end goal is a workflow that learns useful visual representations from unlabeled data first, then adapts to segmentation with a smaller set of masks.
 
-## Problem Statement
+## Problem statement (why annotation is hard)
 
-Traditional supervised learning approaches for image segmentation require large amounts of labeled data, which is time-consuming and expensive to obtain. This project explores self-supervised learning methods to learn meaningful representations from unlabeled satellite imagery, which can then be fine-tuned for solar panel segmentation with minimal labeled data.
+Pixel-level segmentation labels are expensive in satellite imagery because:
 
-## Technical Approach
+- **Small targets & scale variance**: panels can be tiny relative to the full image, and look different across zoom levels.
+- **Ambiguous boundaries**: glare, shadows, roof textures, and compression artifacts blur edges.
+- **Domain shift**: different sensors, seasons, locations, and lighting change the visual statistics.
+- **Class imbalance**: most pixels are “not panel”, so naïve sampling under-trains the minority class.
+- **Throughput constraints**: large images and tiling make “label more data” a slow solution.
 
-### Self-Supervised Learning Methods
+## Initial approach (SimCLR + MoCo v2 variants)
 
-**Initial Approach: MoCo v2**
+I used a two-stage plan:
 
-- Implemented Momentum Contrast (MoCo) v2 for contrastive learning
-- Trained on unlabeled satellite imagery to learn visual representations
-- Experimented with different augmentation strategies and hyperparameters
-- Encountered challenges with convergence and representation quality
+- **Stage 1**: pretrain an encoder on unlabeled satellite imagery (SSL)
+- **Stage 2**: attach a segmentation head and fine-tune on a limited mask set
 
-**Current Approach: BYOL**
+### SimCLR experiments
 
-- Shifted to Bootstrap Your Own Latent (BYOL) for improved stability
-- BYOL eliminates the need for negative pairs, simplifying the training process
-- Achieved significantly lower loss compared to MoCo v2
-- Currently working to improve standard deviation metrics for better representation consistency
+- Trained with **in-batch negatives**, which pushes toward large batch sizes.
+- Tested augmentation policies (cropping, color jitter, blur) and learned quickly that **augmentations that work on ImageNet can be counterproductive** for satellite imagery.
 
-### Architecture
+### MoCo v2 variants
 
-- **Backbone**: ResNet-50 encoder
-- **SSL Framework**: BYOL with online and target networks
-- **Segmentation Head**: U-Net style decoder for pixel-level predictions
-- **Training Strategy**: Two-stage approach (SSL pretraining → supervised fine-tuning)
+- Implemented **MoCo v2-style momentum encoder + queue** to reduce the need for huge batches.
+- Experimented with queue/momentum/temperature settings and augmentation mixes.
 
-## Key Learnings
+## Failure analysis (what went wrong and why)
 
-1. **Self-Supervised Learning**: Deep understanding of contrastive learning and its alternatives
-2. **Hyperparameter Tuning**: Importance of learning rate scheduling, momentum updates, and augmentation strategies
-3. **Model Evaluation**: Analyzing loss curves, feature representations, and downstream task performance
-4. **Research Methodology**: Iterating through approaches based on experimental results
+The early contrastive runs were informative but not production-friendly:
 
-## Technologies Used
+- **Resource limits**: stable contrastive training benefited from higher throughput (batches / resolution) than I consistently had.
+- **Instability**: training was sensitive to augmentation choices; some settings learned shortcuts instead of robust features.
+- **Satellite-specific negatives**: “negative pairs” are tricky when many tiles look similar (rooftops, roads, farmland), which can weaken the contrastive signal.
+- **Downstream uncertainty**: improvements in contrastive loss didn’t reliably translate to better segmentation behavior without careful evaluation tooling.
 
-- **PyTorch**: Deep learning framework
-- **BYOL & MoCo v2**: Self-supervised learning algorithms
-- **CNNs**: Convolutional Neural Networks for feature extraction
-- **Python**: Primary programming language
-- **Satellite Imagery**: High-resolution satellite images for training
+## Pivot decision (why BYOL)
 
-## Challenges
+I pivoted to **BYOL** because it:
 
-- **MoCo v2 Performance**: Initial experiments with MoCo v2 showed unstable training and suboptimal representation learning
-- **BYOL Fine-Tuning**: While achieving low loss, working to improve feature consistency (standard deviation)
-- **Data Processing**: Handling large-scale satellite imagery and efficient data pipelines
-- **Computational Resources**: Managing GPU resources for extended training runs
+- Removes explicit negatives, reducing sensitivity to batch/queue dynamics.
+- Tends to be **more stable** under tighter compute budgets.
+- Lets me focus on representation quality and evaluation rather than constant tuning to prevent training collapse.
 
-## Current Status
+## Results (honest summary)
 
-The project is in active development with BYOL showing promising results. The next steps include:
+- BYOL training achieved a **clean, consistently decreasing loss curve**.
+- I monitored representation health via feature statistics; the **standard deviation stayed lower than expected**, which suggests limited feature diversity (and potential partial collapse).
+- Practically: it’s “learning something”, but it’s not yet at the level where I’m comfortable claiming strong downstream segmentation gains.
 
-- Optimizing BYOL hyperparameters to improve feature diversity
-- Implementing the segmentation head and fine-tuning pipeline
-- Evaluating on labeled solar panel datasets
-- Comparing results with fully supervised baselines
+## Limitations
 
-## Impact
+- **No headline metrics** yet: I’m avoiding unverifiable numbers until downstream segmentation evaluation is fully standardized.
+- **Evaluation still evolving**: linear-probe and small-label fine-tuning protocols need to be tightened for fair comparisons.
+- **Data pipeline tradeoffs**: tiling strategy and augmentations strongly affect what the model learns.
 
-This project demonstrates the practical application of cutting-edge self-supervised learning techniques to real-world computer vision problems. The approach can significantly reduce the annotation burden for satellite image analysis tasks and has potential applications in renewable energy monitoring and urban planning.
+## What I learned (technical takeaways)
+
+- How to implement and debug **SimCLR / MoCo v2 / BYOL** training loops in PyTorch.
+- Why **augmentation design is a first-class engineering problem** for SSL (especially outside ImageNet-like data).
+- How to instrument training beyond loss: collapse checks, feature distribution monitoring, and reproducibility.
+- How to structure a realistic CV workflow: pretraining → evaluation → segmentation fine-tuning, with iterative failure analysis.
+
+## Stack
+
+- PyTorch (training)
+- SSL: SimCLR, MoCo v2 variants, BYOL
+- ResNet-style encoders + segmentation fine-tuning pipeline
+- Satellite imagery preprocessing (tiling, normalization)

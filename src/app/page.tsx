@@ -10,6 +10,7 @@ import {
   Schema,
   Meta,
   Line,
+  Icon,
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes } from "@/resources";
 import { Mailchimp } from "@/components";
@@ -24,6 +25,127 @@ export async function generateMetadata() {
     path: home.path,
     image: home.image,
   });
+}
+
+function Hero() {
+  return (
+    <Column fillWidth horizontal="center" gap="m">
+      <Column maxWidth="s" horizontal="center" align="center">
+        {home.featured.display && (
+          <RevealFx
+            fillWidth
+            horizontal="center"
+            paddingTop="16"
+            paddingBottom="32"
+            paddingLeft="12"
+          >
+            <Badge
+              background="brand-alpha-weak"
+              paddingX="12"
+              paddingY="4"
+              onBackground="neutral-strong"
+              textVariant="label-default-s"
+              arrow={false}
+              href={home.featured.href}
+            >
+              <Row paddingY="2">{home.featured.title}</Row>
+            </Badge>
+          </RevealFx>
+        )}
+        <RevealFx
+          translateY="4"
+          fillWidth
+          horizontal="center"
+          paddingBottom="16"
+        >
+          <Heading wrap="balance" variant="display-strong-l">
+            Computer Vision Engineer who ships models to production
+          </Heading>
+        </RevealFx>
+        <RevealFx
+          translateY="8"
+          delay={0.2}
+          fillWidth
+          horizontal="center"
+          paddingBottom="32"
+        >
+          <Text
+            wrap="balance"
+            onBackground="neutral-weak"
+            variant="heading-default-xl"
+          >
+            I build AI-powered web applications — from training computer vision
+            models to deploying them as APIs and wrapping them in full-stack
+            systems.
+          </Text>
+        </RevealFx>
+        <RevealFx
+          paddingTop="12"
+          delay={0.4}
+          horizontal="center"
+          paddingLeft="12"
+        >
+          <Row gap="12" wrap>
+            <Button
+              id="projects"
+              data-border="rounded"
+              href="/work"
+              variant="primary"
+              size="m"
+              weight="default"
+              arrowIcon
+            >
+              <Row gap="8" vertical="center" paddingRight="4">
+                View Projects
+              </Row>
+            </Button>
+            <Button
+              id="resume"
+              data-border="rounded"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="/resume.pdf"
+              variant="secondary"
+              size="m"
+              weight="default"
+              arrowIcon
+            >
+              <Row gap="8" vertical="center" paddingRight="4">
+                Download Resume
+              </Row>
+            </Button>
+          </Row>
+        </RevealFx>
+        <RevealFx
+          paddingTop="16"
+          delay={0.5}
+          horizontal="center"
+          paddingLeft="12"
+        >
+          <Row gap="12" wrap horizontal="center">
+            <Row title="PyTorch">
+              <Icon name="pytorch" onBackground="neutral-weak" />
+            </Row>
+            <Row title="Computer Vision">
+              <Icon name="eye" onBackground="neutral-weak" />
+            </Row>
+            <Row title="Flask">
+              <Icon name="flask" onBackground="neutral-weak" />
+            </Row>
+            <Row title="React">
+              <Icon name="react" onBackground="neutral-weak" />
+            </Row>
+            <Row title="Node.js">
+              <Icon name="node" onBackground="neutral-weak" />
+            </Row>
+            <Row title="Vercel">
+              <Icon name="vercel" onBackground="neutral-weak" />
+            </Row>
+          </Row>
+        </RevealFx>
+      </Column>
+    </Column>
+  );
 }
 
 export default function Home() {
@@ -42,100 +164,23 @@ export default function Home() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <Column fillWidth horizontal="center" gap="m">
-        <Column maxWidth="s" horizontal="center" align="center">
-          {home.featured.display && (
-            <RevealFx
-              fillWidth
-              horizontal="center"
-              paddingTop="16"
-              paddingBottom="32"
-              paddingLeft="12"
-            >
-              <Badge
-                background="brand-alpha-weak"
-                paddingX="12"
-                paddingY="4"
-                onBackground="neutral-strong"
-                textVariant="label-default-s"
-                arrow={false}
-                href={home.featured.href}
-              >
-                <Row paddingY="2">{home.featured.title}</Row>
-              </Badge>
-            </RevealFx>
-          )}
-          <RevealFx
-            translateY="4"
-            fillWidth
-            horizontal="center"
-            paddingBottom="16"
+      <Hero />
+      <Column fillWidth gap="16" paddingX="l">
+        <Row fillWidth vertical="center" gap="12">
+          <Heading
+            as="h2"
+            variant="heading-strong-l"
+            wrap="nowrap"
+            style={{ whiteSpace: "nowrap" }}
           >
-            <Heading wrap="balance" variant="display-strong-l">
-              {home.headline}
-            </Heading>
-          </RevealFx>
-          <RevealFx
-            translateY="8"
-            delay={0.2}
-            fillWidth
-            horizontal="center"
-            paddingBottom="32"
-          >
-            <Text
-              wrap="balance"
-              onBackground="neutral-weak"
-              variant="heading-default-xl"
-            >
-              {home.subline}
-            </Text>
-          </RevealFx>
-          <RevealFx
-            paddingTop="12"
-            delay={0.4}
-            horizontal="center"
-            paddingLeft="12"
-          >
-            <Row gap="12" wrap>
-              <Button
-                id="about"
-                data-border="rounded"
-                href={about.path}
-                variant="secondary"
-                size="m"
-                weight="default"
-                arrowIcon
-              >
-                <Row gap="8" vertical="center" paddingRight="4">
-                  {about.avatar.display && (
-                    <Avatar
-                      marginRight="8"
-                      style={{ marginLeft: "-0.75rem" }}
-                      src={person.avatar}
-                      size="m"
-                    />
-                  )}
-                  {about.title}
-                </Row>
-              </Button>
-              <Button
-                id="resume"
-                data-border="rounded"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="/resume.pdf"
-                variant="primary"
-                size="m"
-                weight="default"
-                arrowIcon
-              >
-                <Row gap="8" vertical="center" paddingRight="4">
-                  Download Resume
-                </Row>
-              </Button>
-            </Row>
-          </RevealFx>
-        </Column>
+            Selected Projects
+          </Heading>
+          <Line />
+        </Row>
+        <Text variant="body-default-s" onBackground="neutral-weak">
+          A few end-to-end builds where I trained models, shipped APIs, and
+          delivered product UX.
+        </Text>
       </Column>
       <RevealFx translateY="16" delay={0.6}>
         <Projects range={[1, 1]} />
