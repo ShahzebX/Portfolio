@@ -1,7 +1,18 @@
 ---
 title: "Low-Light Image Enhancer Web App"
+subtitle: "Image enhancement pipeline · Zero-DCE → MIRNet pivot"
 publishedAt: "2024-11-20"
 summary: "A full-stack web application that enhances low-light images using a pre-trained MIRNet deep learning model deployed via Flask API with a React frontend."
+github: ""
+demo: ""
+responsibilities:
+  - "PyTorch inference pipeline (MIRNet)"
+  - "Flask image enhancement API"
+  - "React frontend integration (upload/preview/download)"
+engineeringNotes:
+  - "Zero-DCE was unstable in practice → switched to a pretrained MIRNet baseline"
+  - "Flask used for lightweight inference serving"
+  - "Focused on reliability + simplicity over custom training"
 images:
   - "/images/projects/image-enhancer/cover-01.jpg"
   - "/images/projects/image-enhancer/cover-02.jpg"

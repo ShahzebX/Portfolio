@@ -1,10 +1,20 @@
 ---
 title: "Movies Discovery App"
+subtitle: "TMDB discovery + watchlist · JWT auth + responsive UI"
 publishedAt: "2024-06-10"
 summary: "Responsive full-stack web application with TMDB API integration, JWT authentication, and modern UI for discovering and tracking movies."
+github: ""
+demo: ""
+responsibilities:
+  - "React UI for discovery/search/watchlist"
+  - "Node/Express API + TMDB integration"
+  - "JWT authentication + protected routes"
+engineeringNotes:
+  - "Used JWT + protected routes to keep auth simple and stateless"
+  - "Separated TMDB fetch logic behind an API layer to avoid leaking keys and to normalize responses"
+  - "Designed reusable UI components (cards/lists) to keep filters + pagination maintainable"
 images:
   - "/images/projects/movies-app/cover-01.jpg"
-  - "/images/projects/movies-app/cover-02.jpg"
 team:
   - name: "Muhammad Shahzeb"
     role: "Full-Stack Developer"

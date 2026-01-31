@@ -20,6 +20,8 @@ import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
 import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
+import { ProjectProofBlock } from "@/components/work/ProjectProofBlock";
+import { social } from "@/resources";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "work", "projects"]);
@@ -47,7 +49,8 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image: post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+    image:
+      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
     path: `${work.path}/${post.slug}`,
   });
 }
@@ -62,7 +65,9 @@ export default async function Project({
     ? routeParams.slug.join("/")
     : routeParams.slug || "";
 
-  let post = getPosts(["src", "app", "work", "projects"]).find((post) => post.slug === slugPath);
+  let post = getPosts(["src", "app", "work", "projects"]).find(
+    (post) => post.slug === slugPath,
+  );
 
   if (!post) {
     notFound();
@@ -72,6 +77,11 @@ export default async function Project({
     post.metadata.team?.map((person) => ({
       src: person.avatar,
     })) || [];
+
+  const githubFallback = social.find((item) => item.name === "GitHub")?.link;
+  const githubRepoUrl = post.metadata.github || "";
+  const githubProfileUrl = githubFallback;
+  const demoUrl = post.metadata.demo || post.metadata.link;
 
   return (
     <Column as="section" maxWidth="m" horizontal="center" gap="l">
@@ -84,7 +94,8 @@ export default async function Project({
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={
-          post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
+          post.metadata.image ||
+          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
         }
         author={{
           name: person.name,
@@ -96,14 +107,20 @@ export default async function Project({
         <SmartLink href="/work">
           <Text variant="label-strong-m">Projects</Text>
         </SmartLink>
-        <Text variant="body-default-xs" onBackground="neutral-weak" marginBottom="12">
+        <Text
+          variant="body-default-xs"
+          onBackground="neutral-weak"
+          marginBottom="12"
+        >
           {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
         </Text>
         <Heading variant="display-strong-m">{post.metadata.title}</Heading>
       </Column>
       <Row marginBottom="32" horizontal="center">
         <Row gap="16" vertical="center">
-          {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="s" />}
+          {post.metadata.team && (
+            <AvatarGroup reverse avatars={avatars} size="s" />
+          )}
           <Text variant="label-default-m" onBackground="brand-weak">
             {post.metadata.team?.map((member, idx) => (
               <span key={idx}>
@@ -118,8 +135,23 @@ export default async function Project({
           </Text>
         </Row>
       </Row>
+
+      <ProjectProofBlock
+        githubRepoUrl={githubRepoUrl}
+        githubProfileUrl={githubProfileUrl}
+        demoUrl={demoUrl}
+        responsibilities={post.metadata.responsibilities}
+        engineeringNotes={post.metadata.engineeringNotes}
+      />
+
       {post.metadata.images.length > 0 && (
-        <Media priority aspectRatio="16 / 9" radius="m" alt="image" src={post.metadata.images[0]} />
+        <Media
+          priority
+          aspectRatio="16 / 9"
+          radius="m"
+          alt="image"
+          src={post.metadata.images[0]}
+        />
       )}
       <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
         <CustomMDX source={post.content} />

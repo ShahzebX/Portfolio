@@ -1,7 +1,19 @@
 ---
 title: "Solar Panel Segmentation (Final Year Project)"
+subtitle: "Self-supervised satellite segmentation · BYOL after MoCo/SimCLR instability"
 publishedAt: "2025-09-15"
 summary: "Self-supervised computer vision for satellite image segmentation. Explored MoCo v2 and BYOL to achieve stable representation learning for solar panel detection."
+github: ""
+demo: ""
+responsibilities:
+  - "PyTorch self-supervised training loops (SimCLR / MoCo v2 / BYOL)"
+  - "Satellite imagery data pipeline (tiling/augmentations)"
+  - "Segmentation fine-tuning + evaluation tooling (in progress)"
+engineeringNotes:
+  - "Satellite tiles required heavy preprocessing + normalization to keep distributions stable"
+  - "MoCo v2 variants produced unstable representations → pivoted to BYOL"
+  - "Prioritized representation quality checks over fast convergence"
+  - "Segmentation quality limited by scarce labeled validation data"
 images:
   - "/images/projects/solar-panel/cover-01.jpg"
 team:

@@ -19,6 +19,10 @@ type Metadata = {
   tag?: string;
   team: Team[];
   link?: string;
+  github?: string;
+  demo?: string;
+  responsibilities?: string[];
+  engineeringNotes?: string[];
 };
 
 import { notFound } from "next/navigation";
@@ -48,6 +52,10 @@ function readMDXFile(filePath: string) {
       tag: "",
       team: [],
       link: "",
+      github: "",
+      demo: "",
+      responsibilities: [],
+      engineeringNotes: [],
     };
 
     return { metadata: fallbackMetadata, content: "" };
@@ -75,6 +83,10 @@ function readMDXFile(filePath: string) {
       tag: "",
       team: [],
       link: "",
+      github: "",
+      demo: "",
+      responsibilities: [],
+      engineeringNotes: [],
     };
 
     return { metadata: fallbackMetadata, content: rawContent };
@@ -86,10 +98,30 @@ function readMDXFile(filePath: string) {
     publishedAt: data.publishedAt || "",
     summary: data.summary || "",
     image: data.image || "",
-    images: Array.isArray(data.images) ? data.images : (data.images ? [data.images] : []),
+    images: Array.isArray(data.images)
+      ? data.images
+      : data.images
+        ? [data.images]
+        : [],
     tag: data.tag || [],
-    team: Array.isArray(data.team) ? data.team : (data.team ? [data.team] : []),
+    team: Array.isArray(data.team) ? data.team : data.team ? [data.team] : [],
     link: data.link || "",
+    github: typeof data.github === "string" ? data.github : "",
+    demo: typeof data.demo === "string" ? data.demo : "",
+    responsibilities: Array.isArray(data.responsibilities)
+      ? data.responsibilities.filter(
+          (item: unknown) => typeof item === "string",
+        )
+      : typeof data.responsibilities === "string"
+        ? [data.responsibilities]
+        : [],
+    engineeringNotes: Array.isArray(data.engineeringNotes)
+      ? data.engineeringNotes.filter(
+          (item: unknown) => typeof item === "string",
+        )
+      : typeof data.engineeringNotes === "string"
+        ? [data.engineeringNotes]
+        : [],
   };
 
   return { metadata, content };
@@ -113,7 +145,11 @@ function getMDXData(dir: string) {
         return null;
       }
     })
-    .filter(Boolean) as Array<{ metadata: Metadata; slug: string; content: string }>;
+    .filter(Boolean) as Array<{
+    metadata: Metadata;
+    slug: string;
+    content: string;
+  }>;
 }
 
 export function getPosts(customPath = ["", "", "", ""]) {

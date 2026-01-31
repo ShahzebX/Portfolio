@@ -12,7 +12,7 @@ import {
   Line,
   Icon,
 } from "@once-ui-system/core";
-import { home, about, person, baseURL, routes } from "@/resources";
+import { home, about, person, baseURL, routes, social } from "@/resources";
 import { Mailchimp } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { Posts } from "@/components/blog/Posts";
@@ -28,6 +28,10 @@ export async function generateMetadata() {
 }
 
 function Hero() {
+  const githubLink =
+    social.find((item) => item.name === "GitHub")?.link ??
+    "https://github.com/ShahzebX";
+
   return (
     <Column fillWidth horizontal="center" gap="m">
       <Column maxWidth="s" horizontal="center" align="center">
@@ -100,12 +104,29 @@ function Hero() {
               </Row>
             </Button>
             <Button
+              id="github"
+              data-border="rounded"
+              href={githubLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+              size="m"
+              weight="default"
+              arrowIcon
+              title="Training code · inference APIs · frontend"
+            >
+              <Row gap="8" vertical="center" paddingRight="4">
+                <Icon name="github" onBackground="neutral-strong" />
+                GitHub (Code & Experiments)
+              </Row>
+            </Button>
+            <Button
               id="resume"
               data-border="rounded"
               target="_blank"
               rel="noopener noreferrer"
               href="/resume.pdf"
-              variant="secondary"
+              variant="primary"
               size="m"
               weight="default"
               arrowIcon
@@ -122,24 +143,24 @@ function Hero() {
           horizontal="center"
           paddingLeft="12"
         >
-          <Row gap="12" wrap horizontal="center">
+          <Row gap="24" wrap horizontal="center" marginTop="24">
             <Row title="PyTorch">
-              <Icon name="pytorch" onBackground="neutral-weak" />
+              <Icon name="pytorch" onBackground="neutral-weak" size="l" />
             </Row>
             <Row title="Computer Vision">
-              <Icon name="eye" onBackground="neutral-weak" />
+              <Icon name="eye" onBackground="neutral-weak" size="l" />
             </Row>
             <Row title="Flask">
-              <Icon name="flask" onBackground="neutral-weak" />
+              <Icon name="flask" onBackground="neutral-weak" size="l" />
             </Row>
             <Row title="React">
-              <Icon name="react" onBackground="neutral-weak" />
+              <Icon name="react" onBackground="neutral-weak" size="l" />
             </Row>
             <Row title="Node.js">
-              <Icon name="node" onBackground="neutral-weak" />
+              <Icon name="node" onBackground="neutral-weak" size="l" />
             </Row>
             <Row title="Vercel">
-              <Icon name="vercel" onBackground="neutral-weak" />
+              <Icon name="vercel" onBackground="neutral-weak" size="l" />
             </Row>
           </Row>
         </RevealFx>

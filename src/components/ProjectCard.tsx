@@ -15,6 +15,7 @@ interface ProjectCardProps {
   priority?: boolean;
   images: string[];
   title: string;
+  subtitle?: string;
   content: string;
   description: string;
   avatars: { src: string }[];
@@ -25,6 +26,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   href,
   images = [],
   title,
+  subtitle,
   content,
   description,
   avatars,
@@ -47,12 +49,23 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         paddingBottom="24"
         gap="l"
       >
-        {title && (
-          <Flex flex={5}>
-            <Heading as="h2" wrap="balance" variant="heading-strong-l">
-              {title}
-            </Heading>
-          </Flex>
+        {(title || subtitle?.trim()) && (
+          <Column flex={5} gap="4">
+            {title && (
+              <Heading as="h2" wrap="balance" variant="heading-strong-l">
+                {title}
+              </Heading>
+            )}
+            {subtitle?.trim() && (
+              <Text
+                wrap="stable"
+                variant="body-default-s"
+                onBackground="neutral-weak"
+              >
+                {subtitle}
+              </Text>
+            )}
+          </Column>
         )}
         {(avatars?.length > 0 || description?.trim() || content?.trim()) && (
           <Column flex={7} gap="16">
