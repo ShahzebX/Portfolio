@@ -1,7 +1,10 @@
 "use client";
 
-import { Row, Text, Button, useToast } from "@once-ui-system/core";
+import { useState } from "react";
+import Link from "next/link";
+import { iconLibrary } from "@/resources/icons";
 import { socialSharing } from "@/resources";
+import { cn } from "@/lib/utils";
 
 interface ShareSectionProps {
   title: string;
@@ -20,62 +23,63 @@ const socialPlatforms: Record<string, SocialPlatform> = {
     name: "x",
     icon: "twitter",
     label: "X",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
   },
   linkedin: {
     name: "linkedin",
     icon: "linkedin",
     label: "LinkedIn",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
   },
   facebook: {
     name: "facebook",
     icon: "facebook",
     label: "Facebook",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
   },
   pinterest: {
     name: "pinterest",
     icon: "pinterest",
     label: "Pinterest",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}`,
   },
   whatsapp: {
     name: "whatsapp",
     icon: "whatsapp",
     label: "WhatsApp",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`,
   },
   reddit: {
     name: "reddit",
     icon: "reddit",
     label: "Reddit",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
   },
   telegram: {
     name: "telegram",
     icon: "telegram",
     label: "Telegram",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
   },
   email: {
     name: "email",
     icon: "email",
     label: "Email",
-    generateUrl: (title, url) => 
+    generateUrl: (title, url) =>
       `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Check out this post: ${url}`)}`,
   },
 };
 
 export function ShareSection({ title, url }: ShareSectionProps) {
-  const { addToast } = useToast();
+  const [copied, setCopied] = useState(false);
+
   // Don't render if sharing is disabled
   if (!socialSharing.display) {
     return null;
@@ -84,44 +88,61 @@ export function ShareSection({ title, url }: ShareSectionProps) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      addToast({
-        variant: "success",
-        message: "Link copied to clipboard",
-      });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
-      addToast({
-        variant: "danger",
-        message: "Failed to copy link",
-      });
+      console.error("Failed to copy: ", err);
     }
   };
 
   // Get enabled platforms
   const enabledPlatforms = Object.entries(socialSharing.platforms)
-    .filter(([_, enabled]) => enabled && _ !== 'copyLink')
-    .map(([platformKey]) => ({ key: platformKey, ...socialPlatforms[platformKey] }))
-    .filter(platform => platform.name); // Filter out platforms that don't exist in our definitions
+    .filter(([key, enabled]) => enabled && key !== "copyLink")
+    .map(([platformKey]) => ({
+      key: platformKey,
+      ...socialPlatforms[platformKey],
+    }))
+    .filter((platform) => platform.name);
+
+  const LinkIcon = iconLibrary["openLink"];
 
   return (
-    <Row fillWidth center gap="16" marginTop="32" marginBottom="16">
-      <Text variant="label-default-m" onBackground="neutral-weak">
+    <div className="w-full flex flex-wrap items-center justify-center gap-4 mt-8 mb-4">
+      <span className="text-sm text-zinc-500 dark:text-zinc-400">
         Share this post:
-      </Text>
-      <Row data-border="rounded" gap="16" horizontal="center" wrap>
-        {enabledPlatforms.map((platform, index) => (
-          <Button key={index} variant="secondary" size="s" href={platform.generateUrl(title, url)} prefixIcon={platform.icon} />
-        ))}
-        
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        {enabledPlatforms.map((platform, index) => {
+          const IconComponent = iconLibrary[platform.icon];
+          return (
+            <Link
+              key={index}
+              href={platform.generateUrl(title, url)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+              title={platform.label}
+            >
+              {IconComponent && <IconComponent className="w-5 h-5" />}
+            </Link>
+          );
+        })}
+
         {socialSharing.platforms.copyLink && (
-          <Button
-            variant="secondary"
-            size="s"
+          <button
             onClick={handleCopy}
-            prefixIcon="openLink"
-          />
+            className={cn(
+              "p-2 rounded-lg transition-colors",
+              copied
+                ? "bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400"
+                : "bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700",
+            )}
+            title={copied ? "Copied!" : "Copy link"}
+          >
+            {LinkIcon && <LinkIcon className="w-5 h-5" />}
+          </button>
         )}
-      </Row>
-    </Row>
+      </div>
+    </div>
   );
 }

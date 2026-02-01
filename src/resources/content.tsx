@@ -8,7 +8,6 @@ import {
   Social,
   Work,
 } from "@/types";
-import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
   firstName: "Muhammad",
@@ -29,7 +28,7 @@ const newsletter: Newsletter = {
 
 const social: Social = [
   // Links are automatically displayed.
-  // Import new icons in /once-ui/icons.ts
+  // Import new icons in /resources/icons.ts
   // Set essentials: true for links you want to show on the about page
   {
     name: "GitHub",
@@ -61,13 +60,11 @@ const home: Home = {
   featured: {
     display: true,
     title: (
-      <Row gap="12" vertical="center">
-        <strong className="ml-4">FYP</strong>{" "}
-        <Line background="brand-alpha-strong" vert height="20" />
-        <Text marginRight="4" onBackground="brand-medium">
-          Featured work
-        </Text>
-      </Row>
+      <div className="flex items-center gap-3">
+        <strong className="ml-4">FYP</strong>
+        <span className="w-px h-5 bg-blue-400/50" />
+        <span className="mr-1 text-blue-500">Featured work</span>
+      </div>
     ),
     href: "/work/solar-panel-segmentation-fyp",
   },
@@ -81,8 +78,8 @@ const home: Home = {
 
 const about: About = {
   path: "/about",
-  label: "About",
-  title: `About – ${person.name}`,
+  label: "About Me",
+  title: `About Me – ${person.name}`,
   description: `Meet ${person.name}, ${person.role} from ${person.location}`,
   tableOfContent: {
     display: true,
@@ -297,23 +294,11 @@ const blog: Blog = {
 };
 
 /**
- * Metadata for the "Work" page and its navigation entry.
- *
- * @remarks
- * - `path`: route for the Work page ("/work").
- * - `label`: navigation label shown in the UI.
- * - `title` / `description`: page metadata that interpolate `person.name`.
- * - Comment indicates project pages are added as `.mdx` files in `app/blog/posts` and are listed on `/home` and `/work`.
- *
- * @note
- * From this isolated snippet it is not possible to determine whether this object is actually imported/used in the UI elsewhere in the project. To confirm usage, search the codebase for:
- * - imports/references to the identifier `work`
- * - the literal string `"/work"`
- * - references to its fields (e.g., `.path`, `.label`, `.title`, `.description`)
+ * Metadata for the Projects page and its navigation entry.
  */
 const work: Work = {
   path: "/work",
-  label: "Work",
+  label: "Projects",
   title: `Projects – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts

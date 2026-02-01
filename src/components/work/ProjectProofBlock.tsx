@@ -1,5 +1,5 @@
 import React from "react";
-import { Column, SmartLink, Text } from "@once-ui-system/core";
+import Link from "next/link";
 
 type ProjectProofBlockProps = {
   githubRepoUrl?: string;
@@ -26,99 +26,100 @@ export function ProjectProofBlock({
     .map((item) => item.trim())
     .filter(Boolean);
 
-  const hasLinks = Boolean(cleanGithubRepoUrl || cleanGithubProfileUrl || cleanDemoUrl);
+  const hasLinks = Boolean(
+    cleanGithubRepoUrl || cleanGithubProfileUrl || cleanDemoUrl,
+  );
   const hasResponsibilities = cleanResponsibilities.length > 0;
   const hasEngineeringNotes = cleanEngineeringNotes.length > 0;
 
   if (!hasLinks && !hasResponsibilities && !hasEngineeringNotes) return null;
 
   return (
-    <Column
-      fillWidth
-      border="neutral-alpha-weak"
-      radius="l"
-      padding="l"
-      gap="16"
-      marginTop="24"
-      marginBottom="24"
-    >
+    <div className="w-full border border-zinc-200 dark:border-zinc-700 rounded-xl p-6 flex flex-col gap-4 my-6">
       {hasLinks && (
-        <Column gap="8">
-          <Text variant="label-strong-m">Links</Text>
-          <Column gap="4">
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-semibold text-zinc-900 dark:text-white">
+            Links
+          </span>
+          <div className="flex flex-col gap-1">
             {cleanGithubRepoUrl && (
-              <Text variant="body-default-s" onBackground="neutral-weak">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 •{" "}
-                <SmartLink
+                <Link
                   href={cleanGithubRepoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   GitHub Repository
-                </SmartLink>
-              </Text>
+                </Link>
+              </p>
             )}
             {!cleanGithubRepoUrl && cleanGithubProfileUrl && (
-              <Text variant="body-default-s" onBackground="neutral-weak">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 •{" "}
-                <SmartLink
+                <Link
                   href={cleanGithubProfileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   GitHub Profile
-                </SmartLink>
-              </Text>
+                </Link>
+              </p>
             )}
             {cleanDemoUrl && (
-              <Text variant="body-default-s" onBackground="neutral-weak">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 •{" "}
-                <SmartLink
+                <Link
                   href={cleanDemoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   Live Demo
-                </SmartLink>
-              </Text>
+                </Link>
+              </p>
             )}
-          </Column>
-        </Column>
+          </div>
+        </div>
       )}
 
       {hasResponsibilities && (
-        <Column gap="8">
-          <Text variant="label-strong-m">Tech &amp; Responsibility</Text>
-          <Column gap="4">
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-semibold text-zinc-900 dark:text-white">
+            Tech &amp; Responsibility
+          </span>
+          <div className="flex flex-col gap-1">
             {cleanResponsibilities.map((item) => (
-              <Text
+              <p
                 key={item}
-                variant="body-default-s"
-                onBackground="neutral-weak"
+                className="text-sm text-zinc-600 dark:text-zinc-400"
               >
                 • {item}
-              </Text>
+              </p>
             ))}
-          </Column>
-        </Column>
+          </div>
+        </div>
       )}
 
       {hasEngineeringNotes && (
-        <Column gap="8">
-          <Text variant="label-strong-m">Engineering Notes</Text>
-          <Column gap="4">
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-semibold text-zinc-900 dark:text-white">
+            Engineering Notes
+          </span>
+          <div className="flex flex-col gap-1">
             {cleanEngineeringNotes.map((item) => (
-              <Text
+              <p
                 key={item}
-                variant="body-default-s"
-                onBackground="neutral-weak"
+                className="text-sm text-zinc-600 dark:text-zinc-400"
               >
                 • {item}
-              </Text>
+              </p>
             ))}
-          </Column>
-        </Column>
+          </div>
+        </div>
       )}
-    </Column>
+    </div>
   );
 }

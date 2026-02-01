@@ -1,9 +1,8 @@
 "use client";
 
-import React, { JSX } from "react";
-import { Heading, Flex, IconButton, useToast } from "@once-ui-system/core";
-
-import styles from "@/components/HeadingLink.module.scss";
+import React, { type ElementType } from "react";
+import { iconLibrary } from "@/resources/icons";
+import { cn } from "@/lib/utils";
 
 interface HeadingLinkProps {
   id: string;
@@ -12,58 +11,65 @@ interface HeadingLinkProps {
   style?: React.CSSProperties;
 }
 
-export const HeadingLink: React.FC<HeadingLinkProps> = ({ id, level, children, style }) => {
-  const { addToast } = useToast();
+export const HeadingLink: React.FC<HeadingLinkProps> = ({
+  id,
+  level,
+  children,
+  style,
+}) => {
+  const [copied, setCopied] = React.useState(false);
 
   const copyURL = (id: string): void => {
     const url = `${window.location.origin}${window.location.pathname}#${id}`;
     navigator.clipboard.writeText(url).then(
       () => {
-        addToast({
-          variant: "success",
-          message: "Link copied to clipboard.",
-        });
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       },
       () => {
-        addToast({
-          variant: "danger",
-          message: "Failed to copy link.",
-        });
+        console.error("Failed to copy link");
       },
     );
   };
 
-  const variantMap = {
-    1: "display-strong-xs",
-    2: "heading-strong-xl",
-    3: "heading-strong-l",
-    4: "heading-strong-m",
-    5: "heading-strong-s",
-    6: "heading-strong-xs",
+  const sizeMap = {
+    1: "text-3xl font-bold",
+    2: "text-2xl font-bold",
+    3: "text-xl font-semibold",
+    4: "text-lg font-semibold",
+    5: "text-base font-semibold",
+    6: "text-sm font-semibold",
   } as const;
 
-  const variant = variantMap[level];
-  const asTag = `h${level}` as keyof JSX.IntrinsicElements;
+  const HeadingTag: ElementType = `h${level}`;
+  const LinkIcon = iconLibrary["openLink"];
 
   return (
-    <Flex
+    <div
       style={style}
       onClick={() => copyURL(id)}
-      className={styles.control}
-      vertical="center"
-      gap="4"
+      className="group flex items-center gap-2 cursor-pointer"
     >
-      <Heading className={styles.text} id={id} variant={variant} as={asTag}>
+      <HeadingTag
+        id={id}
+        className={cn(
+          sizeMap[level],
+          "text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors",
+        )}
+      >
         {children}
-      </Heading>
-      <IconButton
-        className={styles.visibility}
-        size="s"
-        icon="openLink"
-        variant="ghost"
-        tooltip="Copy"
-        tooltipPosition="right"
-      />
-    </Flex>
+      </HeadingTag>
+      <button
+        className={cn(
+          "p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity",
+          copied
+            ? "text-green-600 dark:text-green-400"
+            : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300",
+        )}
+        title={copied ? "Copied!" : "Copy link"}
+      >
+        {LinkIcon && <LinkIcon className="w-4 h-4" />}
+      </button>
+    </div>
   );
 };

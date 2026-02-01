@@ -1,6 +1,6 @@
 import { getPosts } from "@/utils/utils";
-import { Grid } from "@once-ui-system/core";
 import Post from "./Post";
+import { cn } from "@/lib/utils";
 
 interface PostsProps {
   range?: [number] | [number, number];
@@ -25,21 +25,38 @@ export function Posts({
   }
 
   const sortedBlogs = allBlogs.sort((a, b) => {
-    return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime();
+    return (
+      new Date(b.metadata.publishedAt).getTime() -
+      new Date(a.metadata.publishedAt).getTime()
+    );
   });
 
   const displayedBlogs = range
-    ? sortedBlogs.slice(range[0] - 1, range.length === 2 ? range[1] : sortedBlogs.length)
+    ? sortedBlogs.slice(
+        range[0] - 1,
+        range.length === 2 ? range[1] : sortedBlogs.length,
+      )
     : sortedBlogs;
+
+  const gridCols = {
+    "1": "grid-cols-1",
+    "2": "grid-cols-1 sm:grid-cols-2",
+    "3": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  };
 
   return (
     <>
       {displayedBlogs.length > 0 && (
-        <Grid columns={columns} s={{ columns: 1 }} fillWidth marginBottom="40" gap="16">
+        <div className={cn("grid w-full mb-10 gap-4", gridCols[columns])}>
           {displayedBlogs.map((post) => (
-            <Post key={post.slug} post={post} thumbnail={thumbnail} direction={direction} />
+            <Post
+              key={post.slug}
+              post={post}
+              thumbnail={thumbnail}
+              direction={direction}
+            />
           ))}
-        </Grid>
+        </div>
       )}
     </>
   );

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { routes, protectedRoutes } from "@/resources";
-import { Flex, Spinner, Button, Heading, Column, PasswordInput } from "@once-ui-system/core";
+import { iconLibrary } from "@/resources/icons";
 import NotFound from "@/app/not-found";
 
 interface RouteGuardProps {
@@ -15,9 +15,13 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
   const [isRouteEnabled, setIsRouteEnabled] = useState(false);
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+
+  const EyeIcon = iconLibrary["eye"];
+  const EyeOffIcon = iconLibrary["eyeOff"];
 
   useEffect(() => {
     const performChecks = async () => {
@@ -78,9 +82,9 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <Flex fillWidth paddingY="128" horizontal="center">
-        <Spinner />
-      </Flex>
+      <div className="w-full py-32 flex justify-center">
+        <div className="w-8 h-8 border-2 border-zinc-300 dark:border-zinc-600 border-t-blue-600 rounded-full animate-spin" />
+      </div>
     );
   }
 
@@ -90,21 +94,41 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
 
   if (isPasswordRequired && !isAuthenticated) {
     return (
-      <Column paddingY="128" maxWidth={24} gap="24" center>
-        <Heading align="center" wrap="balance">
+      <div className="py-32 max-w-sm mx-auto flex flex-col gap-6 items-center">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white text-center text-balance">
           This page is password protected
-        </Heading>
-        <Column fillWidth gap="8" horizontal="center">
-          <PasswordInput
-            id="password"
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            errorMessage={error}
-          />
-          <Button onClick={handlePasswordSubmit}>Submit</Button>
-        </Column>
-      </Column>
+        </h1>
+        <div className="w-full flex flex-col gap-2 items-center">
+          <div className="relative w-full">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full px-4 py-3 pr-12 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+            >
+              {showPassword
+                ? EyeOffIcon && <EyeOffIcon className="w-5 h-5" />
+                : EyeIcon && <EyeIcon className="w-5 h-5" />}
+            </button>
+          </div>
+          {error && (
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          )}
+          <button
+            onClick={handlePasswordSubmit}
+            className="px-6 py-2 mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
     );
   }
 

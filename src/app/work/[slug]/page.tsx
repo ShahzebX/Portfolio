@@ -1,24 +1,11 @@
 import { notFound } from "next/navigation";
 import { getPosts } from "@/utils/utils";
-import {
-  Meta,
-  Schema,
-  AvatarGroup,
-  Button,
-  Column,
-  Flex,
-  Heading,
-  Media,
-  Text,
-  SmartLink,
-  Row,
-  Avatar,
-  Line,
-} from "@once-ui-system/core";
+import Image from "next/image";
+import Link from "next/link";
+import type { Metadata } from "next";
 import { baseURL, about, person, work } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
-import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 import { ProjectProofBlock } from "@/components/work/ProjectProofBlock";
 import { social } from "@/resources";
@@ -45,14 +32,20 @@ export async function generateMetadata({
 
   if (!post) return {};
 
-  return Meta.generate({
+  return {
     title: post.metadata.title,
     description: post.metadata.summary,
-    baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
-    path: `${work.path}/${post.slug}`,
-  });
+    openGraph: {
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      url: `${baseURL}${work.path}/${post.slug}`,
+      siteName: person.name,
+      images: [
+        post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+      ],
+      type: "article",
+    },
+  };
 }
 
 export default async function Project({
@@ -84,58 +77,78 @@ export default async function Project({
   const demoUrl = post.metadata.demo || post.metadata.link;
 
   return (
-    <Column as="section" maxWidth="m" horizontal="center" gap="l">
-      <Schema
-        as="blogPosting"
-        baseURL={baseURL}
-        path={`${work.path}/${post.slug}`}
-        title={post.metadata.title}
-        description={post.metadata.summary}
-        datePublished={post.metadata.publishedAt}
-        dateModified={post.metadata.publishedAt}
-        image={
-          post.metadata.image ||
-          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
-        }
-        author={{
-          name: person.name,
-          url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+    <section className="max-w-4xl mx-auto px-4 flex flex-col items-center gap-8">
+      {/* JSON-LD Schema */}
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.metadata.title,
+            description: post.metadata.summary,
+            datePublished: post.metadata.publishedAt,
+            dateModified: post.metadata.publishedAt,
+            url: `${baseURL}${work.path}/${post.slug}`,
+            image:
+              post.metadata.image ||
+              `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
+            author: {
+              "@type": "Person",
+              name: person.name,
+              url: `${baseURL}${about.path}`,
+              image: `${baseURL}${person.avatar}`,
+            },
+          }),
         }}
       />
-      <Column maxWidth="s" gap="16" horizontal="center" align="center">
-        <SmartLink href="/work">
-          <Text variant="label-strong-m">Projects</Text>
-        </SmartLink>
-        <Text
-          variant="body-default-xs"
-          onBackground="neutral-weak"
-          marginBottom="12"
-        >
-          {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
-        </Text>
-        <Heading variant="display-strong-m">{post.metadata.title}</Heading>
-      </Column>
-      <Row marginBottom="32" horizontal="center">
-        <Row gap="16" vertical="center">
-          {post.metadata.team && (
-            <AvatarGroup reverse avatars={avatars} size="s" />
-          )}
-          <Text variant="label-default-m" onBackground="brand-weak">
-            {post.metadata.team?.map((member, idx) => (
-              <span key={idx}>
-                {idx > 0 && (
-                  <Text as="span" onBackground="neutral-weak">
-                    ,{" "}
-                  </Text>
-                )}
-                <SmartLink href={member.linkedIn}>{member.name}</SmartLink>
-              </span>
-            ))}
-          </Text>
-        </Row>
-      </Row>
 
+      {/* Header */}
+      <div className="max-w-lg flex flex-col gap-4 items-center text-center">
+        <Link
+          href="/work"
+          className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+        >
+          Projects
+        </Link>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+          {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
+        </span>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
+          {post.metadata.title}
+        </h1>
+      </div>
+
+      {/* Team */}
+      <div className="flex items-center gap-4 mb-8">
+        {post.metadata.team && avatars.length > 0 && (
+          <div className="flex -space-x-2">
+            {avatars.slice(0, 4).map((avatar, index) => (
+              <Image
+                key={index}
+                src={avatar.src}
+                alt="Team member"
+                width={28}
+                height={28}
+                className="rounded-full border-2 border-white dark:border-zinc-900"
+              />
+            ))}
+          </div>
+        )}
+        <span className="text-sm text-blue-600 dark:text-blue-400">
+          {post.metadata.team?.map((member, idx) => (
+            <span key={idx}>
+              {idx > 0 && <span className="text-zinc-400">, </span>}
+              <Link href={member.linkedIn} className="hover:underline">
+                {member.name}
+              </Link>
+            </span>
+          ))}
+        </span>
+      </div>
+
+      {/* Proof Block */}
       <ProjectProofBlock
         githubRepoUrl={githubRepoUrl}
         githubProfileUrl={githubProfileUrl}
@@ -144,26 +157,34 @@ export default async function Project({
         engineeringNotes={post.metadata.engineeringNotes}
       />
 
+      {/* Hero Image */}
       {post.metadata.images.length > 0 && (
-        <Media
-          priority
-          aspectRatio="16 / 9"
-          radius="m"
-          alt="image"
-          src={post.metadata.images[0]}
-        />
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden">
+          <Image
+            src={post.metadata.images[0]}
+            alt={post.metadata.title}
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
       )}
-      <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
+
+      {/* Article Content */}
+      <article className="prose prose-zinc dark:prose-invert max-w-xl mx-auto">
         <CustomMDX source={post.content} />
-      </Column>
-      <Column fillWidth gap="40" horizontal="center" marginTop="40">
-        <Line maxWidth="40" />
-        <Heading as="h2" variant="heading-strong-xl" marginBottom="24">
+      </article>
+
+      {/* Related Projects */}
+      <div className="w-full flex flex-col gap-10 items-center mt-10">
+        <hr className="w-40 border-zinc-200 dark:border-zinc-700" />
+        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
           Related projects
-        </Heading>
+        </h2>
         <Projects exclude={[post.slug]} range={[2]} />
-      </Column>
+      </div>
+
       <ScrollToHash />
-    </Column>
+    </section>
   );
 }

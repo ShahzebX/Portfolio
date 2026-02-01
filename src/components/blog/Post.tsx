@@ -1,8 +1,10 @@
 "use client";
 
-import { Card, Column, Media, Row, Avatar, Text } from "@once-ui-system/core";
+import Link from "next/link";
+import Image from "next/image";
 import { formatDate } from "@/utils/formatDate";
 import { person } from "@/resources";
+import { cn } from "@/lib/utils";
 
 interface PostProps {
   post: any;
@@ -12,52 +14,56 @@ interface PostProps {
 
 export default function Post({ post, thumbnail, direction }: PostProps) {
   return (
-    <Card
-      fillWidth
-      key={post.slug}
+    <Link
       href={`/blog/${post.slug}`}
-      transition="micro-medium"
-      direction={direction}
-      border="transparent"
-      background="transparent"
-      padding="4"
-      radius="l-4"
-      gap={direction === "column" ? undefined : "24"}
-      s={{ direction: "column" }}
+      className={cn(
+        "group w-full flex p-1 rounded-xl transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
+        direction === "column" ? "flex-col" : "flex-col sm:flex-row gap-6",
+      )}
     >
       {post.metadata.image && thumbnail && (
-        <Media
-          priority
-          sizes="(max-width: 768px) 100vw, 640px"
-          border="neutral-alpha-weak"
-          cursor="interactive"
-          radius="l"
-          src={post.metadata.image}
-          alt={"Thumbnail of " + post.metadata.title}
-          aspectRatio="16 / 9"
-        />
+        <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700">
+          <Image
+            src={post.metadata.image}
+            alt={"Thumbnail of " + post.metadata.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, 640px"
+          />
+        </div>
       )}
-      <Row fillWidth>
-        <Column maxWidth={28} paddingY="24" paddingX="l" gap="20" vertical="center">
-          <Row gap="24" vertical="center">
-            <Row vertical="center" gap="16">
-              <Avatar src={person.avatar} size="s" />
-              <Text variant="label-default-s">{person.name}</Text>
-            </Row>
-            <Text variant="body-default-xs" onBackground="neutral-weak">
+
+      <div className="flex w-full">
+        <div className="max-w-lg py-6 px-6 flex flex-col gap-5 justify-center">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-4">
+              <Image
+                src={person.avatar}
+                alt={person.name}
+                width={24}
+                height={24}
+                className="rounded-full"
+              />
+              <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                {person.name}
+              </span>
+            </div>
+            <span className="text-xs text-zinc-500 dark:text-zinc-400">
               {formatDate(post.metadata.publishedAt, false)}
-            </Text>
-          </Row>
-          <Text variant="heading-strong-l" wrap="balance">
+            </span>
+          </div>
+
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white text-balance">
             {post.metadata.title}
-          </Text>
+          </h3>
+
           {post.metadata.tag && (
-            <Text variant="label-strong-s" onBackground="neutral-weak">
+            <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
               {post.metadata.tag}
-            </Text>
+            </span>
           )}
-        </Column>
-      </Row>
-    </Card>
+        </div>
+      </div>
+    </Link>
   );
 }
