@@ -109,12 +109,12 @@ const about: About = {
         <br />
         My work includes:
         <br />
-        📌 Low-Light Image Enhancer built with Flask + MIRNet + React
+        Low-Light Image Enhancer built with Flask + MIRNet + React
         <br />
-        📌 Solar Panel Segmentation (FYP) exploring BYOL and self-supervised
+        Solar Panel Segmentation (FYP) exploring BYOL and self-supervised
         learning
         <br />
-        📌 Enterprise Full-Stack Apps using the MERN stack
+        Enterprise Full-Stack Apps using the MERN stack
         <br />
         <br />
         I'm currently seeking roles where I can build AI-augmented products,
@@ -126,22 +126,6 @@ const about: About = {
     display: true, // set to false to hide this section
     title: "Work Experience",
     experiences: [
-      {
-        company: "Artificial Intelligence Community of Pakistan",
-        timeframe: "Jan 2025 - Present",
-        role: "Campus Co-Lead",
-        achievements: [
-          <>
-            Lead a diverse team to organize two monthly webinars with industry
-            experts, democratizing AI education for students across the region.
-          </>,
-          <>
-            Manage cross-departmental teams and facilitate knowledge-sharing
-            sessions on AI/ML topics.
-          </>,
-        ],
-        images: [],
-      },
       {
         company: "Artificial Intelligence Community of Pakistan",
         timeframe: "Jan 2025 - Present",
@@ -239,10 +223,10 @@ const about: About = {
           </>
         ),
         tags: [
-          { name: "React" },
+          { name: "React", icon: "react" },
           { name: "Next.js", icon: "nextjs" },
-          { name: "Tailwind CSS" },
-          { name: "Axios" },
+          { name: "Tailwind CSS", icon: "tailwind" },
+          { name: "Axios", icon: "axios" },
         ],
         images: [],
       },
@@ -252,10 +236,10 @@ const about: About = {
           <>Creating scalable server-side applications and RESTful APIs.</>
         ),
         tags: [
-          { name: "Node.js" },
-          { name: "Express.js" },
-          { name: "Flask" },
-          { name: "MongoDB" },
+          { name: "Node.js", icon: "nodejs" },
+          { name: "Express.js", icon: "express" },
+          { name: "Flask", icon: "flask" },
+          { name: "MongoDB", icon: "mongodb" },
         ],
         images: [],
       },
@@ -268,15 +252,15 @@ const about: About = {
           </>
         ),
         tags: [
-          { name: "PyTorch" },
-          { name: "CNNs" },
-          { name: "Self-Supervised Learning" },
-          { name: "MIRNet" },
-          { name: "BYOL" },
-          { name: "MoCo v2" },
-          { name: "Model Deployment" },
-          { name: "RAG" },
-          { name: "LLM Fine-Tuning" },
+          { name: "PyTorch", icon: "pytorch" },
+          { name: "CNNs", icon: "cnn" },
+          { name: "Self-Supervised Learning", icon: "ssl" },
+          { name: "MIRNet", icon: "mirnet" },
+          { name: "BYOL", icon: "byol" },
+          { name: "MoCo v2", icon: "mocov2" },
+          { name: "Model Deployment", icon: "modeldeployment" },
+          { name: "RAG", icon: "rag" },
+          { name: "LLM Fine-Tuning", icon: "llmfine-tuning" },
         ],
         images: [],
       },
