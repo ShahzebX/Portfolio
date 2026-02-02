@@ -1,18 +1,18 @@
 ---
-title: "Low-Light Image Enhancer Web App"
-subtitle: "Image enhancement pipeline · Zero-DCE → MIRNet pivot"
+title: "AI Image Enhancement Studio"
+subtitle: "Colorization + low-light enhancement · Zero-DCE → MIRNet-style pivot"
 publishedAt: "2024-11-20"
-summary: "A full-stack web application that enhances low-light images using a pre-trained MIRNet deep learning model deployed via Flask API with a React frontend."
-github: ""
+summary: "Flask-based CV web app that colorizes grayscale photos and improves low-light images via an inference-first pipeline, prioritizing stable results and predictable runtime over brittle training-heavy setups."
+github: "https://github.com/ShahzebX/Image-Enhancement-DL"
 demo: ""
 responsibilities:
-  - "PyTorch inference pipeline (MIRNet)"
-  - "Flask image enhancement API"
-  - "React frontend integration (upload/preview/download)"
+  - "Implemented end-to-end inference flows (colorization + low-light enhancement)"
+  - "Flask web UI + API endpoint design, validation, and error handling"
+  - "Experimentation and model selection (U-Net / Zero-DCE → stable shipped pipeline)"
 engineeringNotes:
-  - "Zero-DCE was unstable in practice → switched to a pretrained MIRNet baseline"
-  - "Flask used for lightweight inference serving"
-  - "Focused on reliability + simplicity over custom training"
+  - "Zero-DCE underperformed on in-the-wild images → pivoted to a MIRNet-inspired, deterministic enhancement pipeline for reliability"
+  - "Used OpenCV DNN + a pre-trained Caffe colorization model to avoid training and keep inference reproducible"
+  - "Shipped an inference-first system with safeguards (file validation, size limits, predictable error responses)"
 images:
   - "/images/projects/image-enhancer/cover-01.jpg"
   - "/images/projects/image-enhancer/cover-02.jpg"
@@ -23,82 +23,76 @@ team:
     linkedIn: "https://www.linkedin.com/in/shahzebx"
 ---
 
-## What I Built
+---
 
-A production-style web app that improves low-light photos using a deep learning model behind an API.
+## AI Image Enhancement Studio
 
-- **Frontend**: upload → preview → enhanced result → download
-- **Backend**: Flask inference API wrapping a PyTorch model
-- **Focus**: reliable results, predictable latency, and a clean integration path (not chasing paper metrics)
+**One-line summary:**  
+Built a lightweight image restoration web app that colorizes grayscale photos and improves low-light images with predictable runtime—useful for real-world restoration workflows where “just increase exposure” fails.
 
-## Problem
+### Problem
 
-Low-light images usually suffer from a mix of issues that are hard to fix with classic filters:
+Two common restoration tasks are deceptively hard in production:
 
-- noise amplification
-- color shifts / white balance problems
-- loss of detail in shadows
-- varying exposure conditions across devices
+- **Low-light enhancement**: boosting brightness often amplifies noise, clips highlights, and shifts colors because the signal-to-noise ratio collapses in dark regions.
+- **Colorization**: grayscale-to-color is fundamentally ambiguous—multiple valid colors can match the same luminance—so naive tinting or histogram tricks produce flat, inconsistent results.
 
-The goal was a simple UX: “drop an image, get back a better version” without requiring users to tune parameters.
+### Initial Approach & Failure
 
-## First Attempt (and Why It Failed): Zero-DCE
+- **Zero-DCE (low-light enhancement prototype)**
+- **Why it failed**: improvements plateaued on real images, generalized poorly outside the LOL-style distribution, and produced noise amplification / instability in extremely dark regions.
+- **What I learned**: for an end-user app, stability and predictable behavior matter more than a “clever” method that needs careful tuning to avoid artifacts.
 
-I started with **Zero-DCE** because it’s lightweight and doesn’t require paired low/normal-light ground truth.
+### Final Solution
 
-In practice, my implementation didn’t meet the bar for a deployable app:
+- **Model architecture chosen**: a MIRNet-inspired enhancement strategy, shipped as a fast deterministic pipeline (CLAHE + denoise + gamma + mild sharpening) with an optional deep-model hook reserved for later.
+- **Why this model was better suited**: it’s stable across diverse inputs and is deployable on CPU without training-time dependencies.
+- **Data handling and preprocessing approach**: input validation (file type + size), defensive image decoding (PIL → NumPy), and color-space transforms (LAB/HSV) to adjust luminance while protecting chroma.
 
-- **Output instability** across different scenes (some images improved, others developed artifacts)
-- **Hard-to-debug behavior** when trying to tune curves and preprocessing
-- **Integration friction**: getting consistent results required more iteration than the project timeline allowed
+### Key Engineering Decisions
 
-Instead of forcing it, I treated this as an engineering decision: ship something reliable, then iterate.
+- **Model choice reasoning**: used a pre-trained OpenCV-DNN Caffe colorization model (Zhang et al., ECCV 2016) to get consistent outputs without owning training.
+- **Inference vs training trade-offs**: the repo is intentionally inference-first—no training pipeline shipped—so the system stays reproducible and easy to deploy.
+- **Why this model instead of alternatives**: Zero-DCE introduced instability and domain-shift issues; the MIRNet-style pipeline provided a better reliability/latency trade-off for a web workflow.
+- **Deployment-related decisions**: packaged both pipelines behind a single Flask app with a unified `/process` endpoint, health checks, and predictable error responses.
 
-## Pivot: Why MIRNet
+### My Role & Responsibilities
 
-I switched to a **pretrained MIRNet**-based approach because it gave me a stable baseline that was easier to productionize:
+- Dataset preparation and experimentation
+- Model training / fine-tuning
+- Evaluation and iteration
+- Backend or inference integration (if applicable)
 
-- **Predictable enhancement quality** without retraining from scratch
-- **Cleaner inference pipeline** (standard normalization/denormalization, straightforward tensor handling)
-- **Better end-to-end reliability** for a web workflow (upload → inference → return image)
+### Tech Stack
 
-This wasn’t “the best model possible” — it was the best choice for building a product-like system under constraints.
+**Modeling:** MIRNet-inspired enhancement pipeline (deterministic), Zhang et al. colorization model (Caffe)  
+**Frameworks:** Python, NumPy, OpenCV (DNN)  
+**Backend / Inference:** Flask, Pillow (PIL)  
+**Visualization / UI (if any):** HTML/CSS/JS frontend served from Flask templates/static
 
-## System Design
+### Results & Observations
 
-### Backend (Flask + PyTorch)
+- Qualitative improvements: better midtone visibility and local contrast on underexposed images; plausible colorization on common portraits/objects.
+- Quantitative metrics: not included in the repository (no PSNR/SSIM/LPIPS harness shipped).
+- Limitations: severe underexposure can still reveal grain/noise after enhancement; colorization can pick implausible hues on rare objects, low-texture regions, or domain-shifted imagery.
 
-- Loads the model once at startup (avoids cold-start penalties per request)
-- Accepts an uploaded image, runs preprocessing + inference, returns an enhanced image
-- Enforces basic safeguards (file type checks, size limits, predictable error responses)
+### Constraints & Challenges
 
-### Frontend (React)
+- Underexposed regions have low SNR, so any luminance lift risks noise amplification.
+- Domain shift (“in-the-wild” images vs curated datasets) quickly exposes brittle models.
+- Ambiguity in colorization means outputs are plausible guesses, not ground truth.
+- Deployment practicality: CPU-friendly inference, bounded uploads, and predictable error handling were prioritized over heavy training pipelines.
 
-- File upload UX with clear states: idle → uploading → processing → done/error
-- Before/after preview so the user can judge results immediately
-- Download action that returns the processed output as an image file
+### Proof of Work
 
-## Challenges I Hit (Real-World)
+- GitHub Repository: https://github.com/ShahzebX/Image-Enhancement-DL
+- Sample Outputs: (add before/after screenshots from your portfolio images)
 
-- **Latency vs. quality**: larger models can look better but feel slower; I prioritized responsiveness for single-image requests.
-- **Memory constraints**: high-resolution images can blow up RAM/VRAM; resizing and safe limits were necessary.
-- **Image I/O quirks**: different formats, orientations, and color spaces require defensive handling.
-- **Deployment reality**: model inference wants a server runtime; the UI can be static-ish, but inference needs proper hosting.
+### What I’d Improve Next
 
-## Practical Trade-Offs
+- Replace the classical enhancement path with a real trained MIRNet (or equivalent) checkpoint plus model/version management.
+- Add an evaluation harness with a fixed test set and PSNR/SSIM/LPIPS + runtime benchmarks.
+- Expand dataset coverage and document curation steps for better “in-the-wild” robustness.
+- Add batching/caching and optional GPU execution for higher-throughput deployment.
 
-- Used a pretrained model to **reduce risk** and get a dependable baseline.
-- Focused on **robustness and DX** (stable API contracts, predictable errors) rather than squeezing out marginal visual gains.
-- Kept the interface minimal so the app is usable without ML knowledge.
-
-## What I Learned
-
-- Turning CV research ideas into a product is mostly about **systems**: I/O, failure modes, latency, and integration.
-- “Works in a notebook” is not enough — **operational reliability** matters more than model novelty for most users.
-- Pivoting quickly (Zero-DCE → MIRNet) is sometimes the most technical decision you can make.
-
-## Next Improvements
-
-- Batch uploads and background processing
-- Optional user controls (strength, denoise level) with safe defaults
-- Containerized deployment and a clearer separation between UI hosting and inference hosting
+---

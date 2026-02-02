@@ -73,7 +73,7 @@ const NavButton: React.FC<NavButtonProps> = ({
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+        "flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors",
         selected
           ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white"
           : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
@@ -196,7 +196,7 @@ export const Header = () => {
 
             {display.themeSwitcher && (
               <>
-                <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-700" />
+                <div className="w-px h-6 rounded-full bg-zinc-200 dark:bg-zinc-700" />
                 <ThemeToggle />
               </>
             )}

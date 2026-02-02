@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col gap-12 py-8">
+    <div className="w-full max-w-2xl mx-auto flex flex-col gap-12 pt-0 pb-8">
       <Hero />
 
       <div className="flex flex-col gap-4 px-4">

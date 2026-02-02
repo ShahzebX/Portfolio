@@ -59,12 +59,12 @@ export function Hero() {
       className="w-full flex flex-col items-center gap-8"
     >
       {home.featured.display && (
-        <div className="w-full flex justify-center pt-4">
+        <div className="w-full flex justify-center">
           <Link
             href={home.featured.href || "/work"}
             aria-label="Open featured work"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700 text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors shadow-lg">
               <span className="font-semibold">FYP</span>
               <span className="h-5 w-px bg-brand-500/50" />
               <span className="text-brand-600 dark:text-brand-400">
