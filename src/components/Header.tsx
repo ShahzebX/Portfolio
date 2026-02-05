@@ -77,7 +77,7 @@ const NavButton: React.FC<NavButtonProps> = ({
       className={cn(
         "flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all focus:outline-none focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900",
         selected
-          ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm"
+          ? "bg-zinc-900 dark:bg-yellow-50 text-white dark:text-zinc-900 shadow-sm"
           : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white",
       )}
     >

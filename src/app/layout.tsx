@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { fontSans, fontHeading, fontMono } from "@/lib/fonts";
+import Script from "next/script";
 
 import { Footer, Header, RouteGuard, Providers } from "@/components";
 import { home, person } from "@/resources";
@@ -65,8 +66,9 @@ export default async function RootLayout({
       className={cn(fontSans.variable, fontHeading.variable, fontMono.variable)}
     >
       <head>
-        <script
+        <Script
           id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -92,7 +94,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased">
+      <body className="min-h-screen bg-yellow-50 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 antialiased">
         <Providers>
           {/* Skip to main content for accessibility */}
           <a
@@ -104,7 +106,7 @@ export default async function RootLayout({
 
           {/* Subtle gradient background */}
           <div
-            className="fixed inset-0 -z-10 bg-gradient-to-br from-zinc-50 via-white to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950"
+            className="fixed inset-0 -z-10 bg-gradient-to-br from-yellow-50 via-white to-yellow-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950"
             aria-hidden="true"
           />
 

@@ -98,8 +98,8 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        I am a Senior Software Engineer with a specialized focus on Full-Stack
-        Development and Computer Vision. With over a decade of experience, I
+        I am a Software Engineer with a specialized focus on Full-Stack
+        Development and Computer Vision. With an experience of two years, I
         bridge the gap between complex AI models and user-centric web
         applications. My expertise spans building scalable distributed systems,
         training state-of-the-art deep learning models, and crafting intuitive

@@ -33,7 +33,7 @@ export default function Home() {
             </p>
           </div>
           <div
-            className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-800 dark:to-transparent ml-8"
+            className="hidden lg:block h-px flex-[4] bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
             aria-hidden="true"
           />
         </div>
@@ -83,8 +83,8 @@ export default function Home() {
               </p>
             </div>
             <div
-              className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-800 dark:to-transparent ml-8"
-              aria-hidden="true"
+              className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-300 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
+              aria-hidden="false"
             />
           </div>
           <Posts range={[1, 2]} columns="2" />

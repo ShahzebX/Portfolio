@@ -24,7 +24,7 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
         src={images[currentIndex]}
         alt={`${title} - Image ${currentIndex + 1}`}
         fill
-        className="object-cover"
+        className="object-cover object-center"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
         priority
       />

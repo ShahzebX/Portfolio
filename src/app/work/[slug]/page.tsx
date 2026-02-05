@@ -107,15 +107,6 @@ export default async function Project({
 
       {/* Header */}
       <div className="max-w-lg flex flex-col gap-4 items-center text-center">
-        <Link
-          href="/work"
-          className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-        >
-          Projects
-        </Link>
-        <span className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
-          {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
-        </span>
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
           {post.metadata.title}
         </h1>
@@ -126,14 +117,18 @@ export default async function Project({
         {post.metadata.team && avatars.length > 0 && (
           <div className="flex -space-x-2">
             {avatars.slice(0, 4).map((avatar, index) => (
-              <Image
+              <div
                 key={index}
-                src={avatar.src}
-                alt="Team member"
-                width={28}
-                height={28}
-                className="rounded-full border-2 border-white dark:border-zinc-900"
-              />
+                className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-zinc-900"
+              >
+                <Image
+                  src={avatar.src}
+                  alt="Team member"
+                  width={50}
+                  height={50}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
             ))}
           </div>
         )}

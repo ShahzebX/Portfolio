@@ -154,7 +154,7 @@ export function Hero() {
 
               <Link
                 href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-2 text-zinc-700 dark:text-zinc-300 rounded-full font-medium text-sm ring-1 ring-zinc-200 dark:ring-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                className="group inline-flex items-center gap-2 px-5 py-2 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white rounded-full font-medium text-sm ring-1 ring-zinc-200 dark:ring-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
               >
                 Contact Me
               </Link>

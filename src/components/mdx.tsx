@@ -61,7 +61,7 @@ function createImage({ alt, src, ...props }: { alt?: string; src: string }) {
         alt={alt || ""}
         width={960}
         height={540}
-        className="w-full h-auto object-cover"
+        className="w-full h-auto object-cover object-center"
         sizes="(max-width: 960px) 100vw, 960px"
         {...props}
       />
