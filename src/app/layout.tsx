@@ -65,10 +65,11 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn(fontSans.variable, fontHeading.variable, fontMono.variable)}
     >
-      <head>
+      <head suppressHydrationWarning>
         <Script
           id="theme-init"
           strategy="beforeInteractive"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

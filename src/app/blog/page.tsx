@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Mailchimp } from "@/components";
 import { Posts } from "@/components/blog/Posts";
 import { baseURL, blog, person, newsletter } from "@/resources";
 
@@ -49,7 +48,6 @@ export default function Blog() {
       <div className="w-full flex flex-col gap-10">
         <Posts range={[1, 1]} thumbnail />
         <Posts range={[2, 3]} columns="2" thumbnail direction="column" />
-        <Mailchimp />
         <h2 className="text-2xl font-bold ml-6 text-zinc-900 dark:text-white">
           Earlier posts
         </h2>
