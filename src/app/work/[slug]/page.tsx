@@ -8,6 +8,7 @@ import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { ProjectProofBlock } from "@/components/work/ProjectProofBlock";
+import { ImageSlider } from "@/components/work/ImageSlider";
 import { social } from "@/resources";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -157,18 +158,13 @@ export default async function Project({
         engineeringNotes={post.metadata.engineeringNotes}
       />
 
-      {/* Hero Image */}
-      {post.metadata.images.length > 0 && (
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-          <Image
-            src={post.metadata.images[0]}
-            alt={post.metadata.title}
-            fill
-            priority
-            className="object-cover"
-          />
-        </div>
-      )}
+      {/* Hero Image / Slider */}
+      <div className="w-full">
+        <ImageSlider
+          images={post.metadata.images}
+          title={post.metadata.title}
+        />
+      </div>
 
       {/* Article Content */}
       <article className="prose prose-zinc dark:prose-invert max-w-xl mx-auto">

@@ -23,6 +23,7 @@ type Metadata = {
   demo?: string;
   responsibilities?: string[];
   engineeringNotes?: string[];
+  technologies?: string[];
 };
 
 import { notFound } from "next/navigation";
@@ -87,6 +88,7 @@ function readMDXFile(filePath: string) {
       demo: "",
       responsibilities: [],
       engineeringNotes: [],
+      technologies: [],
     };
 
     return { metadata: fallbackMetadata, content: rawContent };
@@ -121,6 +123,11 @@ function readMDXFile(filePath: string) {
         )
       : typeof data.engineeringNotes === "string"
         ? [data.engineeringNotes]
+        : [],
+    technologies: Array.isArray(data.technologies)
+      ? data.technologies.filter((item: unknown) => typeof item === "string")
+      : typeof data.technologies === "string"
+        ? [data.technologies]
         : [],
   };
 

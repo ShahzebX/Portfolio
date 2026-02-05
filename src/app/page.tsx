@@ -1,5 +1,5 @@
 import { home, routes } from "@/resources";
-import { Hero, Mailchimp } from "@/components";
+import { Hero, ContactForm } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { Posts } from "@/components/blog/Posts";
 import type { Metadata } from "next";
@@ -11,48 +11,92 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col gap-12 pt-0 pb-8">
+    <div className="w-full flex flex-col gap-20 pb-16">
       <Hero />
-      <div className="flex flex-col gap-4 px-4">
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white whitespace-nowrap">
-            Selected Projects
-          </h2>
-          <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800" />
+
+      {/* Projects Section */}
+      <section
+        aria-labelledby="projects-heading"
+        className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full"
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <h2
+              id="projects-heading"
+              className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white"
+            >
+              Selected Projects
+            </h2>
+            <p className="text-base text-zinc-600 dark:text-zinc-400">
+              End-to-end applications spanning computer vision, full-stack
+              development, and ML deployment
+            </p>
+          </div>
+          <div
+            className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-800 dark:to-transparent ml-8"
+            aria-hidden="true"
+          />
         </div>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          A few end-to-end builds where I trained models, shipped APIs, and
-          delivered product UX.
-        </p>
-      </div>
 
-      <div>
-        <Projects range={[1, 1]} />
-      </div>
+        <Projects range={[1, 4]} />
 
+        <div className="flex justify-center mt-4">
+          <a
+            href="/work"
+            className="group inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+          >
+            View All Projects
+            <svg
+              className="w-4 h-4 transition-transform group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      {/* Blog Section */}
       {routes["/blog"] && (
-        <div className="flex flex-col gap-6 mb-8">
-          <div className="flex pr-16">
-            <div className="w-12 max-w-[48px] h-px bg-zinc-200 dark:bg-zinc-800" />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-6 mt-10">
-            <div className="flex-1 pl-4 pt-6">
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white text-balance">
-                Latest from the blog
+        <section
+          aria-labelledby="blog-heading"
+          className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-2">
+              <h2
+                id="blog-heading"
+                className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white"
+              >
+                Latest Writing
               </h2>
+              <p className="text-base text-zinc-600 dark:text-zinc-400">
+                Technical insights and lessons learned from building AI-powered
+                systems
+              </p>
             </div>
-            <div className="flex-[3] px-5">
-              <Posts range={[1, 2]} columns="2" />
-            </div>
+            <div
+              className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-800 dark:to-transparent ml-8"
+              aria-hidden="true"
+            />
           </div>
-          <div className="flex pl-16 justify-end">
-            <div className="w-12 max-w-[48px] h-px bg-zinc-200 dark:bg-zinc-800" />
-          </div>
-        </div>
+          <Posts range={[1, 2]} columns="2" />
+        </section>
       )}
 
-      <Projects range={[2]} />
-      <Mailchimp />
+      <div
+        id="contact"
+        className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full scroll-mt-24"
+      >
+        <ContactForm />
+      </div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Work() {
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-6">
+    <div className="max-w-5xl mx-auto px-4 pt-6 pb-12">
       {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
@@ -41,11 +41,19 @@ export default function Work() {
         }}
       />
 
-      <h1 className="text-3xl font-bold text-center mb-8 text-zinc-900 dark:text-white">
-        {work.label}
-      </h1>
+      {/* Header Section */}
+      <header className="mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zinc-900 dark:text-white">
+          {work.label}
+        </h1>
+        <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+          A collection of projects demonstrating full-stack engineering,
+          computer vision research, and production ML deployment
+        </p>
+      </header>
 
-      <Projects />
+      {/* Projects Grid */}
+      <Projects layout="list" />
     </div>
   );
 }

@@ -72,14 +72,18 @@ const NavButton: React.FC<NavButtonProps> = ({
   return (
     <Link
       href={href}
+      aria-label={label || href}
+      aria-current={selected ? "page" : undefined}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors",
+        "flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all focus:outline-none focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900",
         selected
-          ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white"
-          : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+          ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm"
+          : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white",
       )}
     >
-      {IconComponent && <IconComponent className="w-5 h-5" />}
+      {IconComponent && (
+        <IconComponent className="w-5 h-5" aria-hidden="true" />
+      )}
       {label && <span>{label}</span>}
     </Link>
   );
@@ -90,29 +94,26 @@ export const Header = () => {
 
   return (
     <>
-      {/* Top fade for desktop */}
-      <div className="hidden sm:block fixed top-0 left-0 right-0 h-20 bg-gradient-to-b from-white dark:from-zinc-950 to-transparent z-[9] pointer-events-none" />
-
-      {/* Bottom fade for mobile */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-zinc-950 to-transparent z-[9] pointer-events-none" />
-
-      <header className="sticky top-0 sm:top-0 sm:fixed sm:bottom-auto fixed bottom-0 w-full p-2 flex justify-center z-[9]">
-        {/* Left - Location (desktop only) */}
-        <div className="hidden sm:flex flex-1 items-center pl-3 text-sm text-zinc-600 dark:text-zinc-400">
-          {display.location && person.location}
-        </div>
-
-        {/* Center - Navigation */}
-        <div className="flex justify-center">
+      <header className="fixed top-4 left-0 right-0 w-full flex justify-center z-50 pointer-events-none">
+        <div className="pointer-events-auto">
           <nav
-            className="flex items-center gap-1 p-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-2xl shadow-lg"
+            className="flex items-center gap-1 p-1.5 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-700/80 rounded-full shadow-lg shadow-zinc-200/30 dark:shadow-black/30"
             suppressHydrationWarning
+            aria-label="Main navigation"
           >
             {routes["/"] && (
-              <NavButton href="/" icon="home" selected={pathname === "/"} />
+              <NavButton
+                href="/"
+                icon="home"
+                label="Home"
+                selected={pathname === "/"}
+              />
             )}
 
-            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-700" />
+            <div
+              className="w-px h-6 bg-zinc-200 dark:bg-zinc-700"
+              aria-hidden="true"
+            />
 
             {routes["/about"] && (
               <>
@@ -201,11 +202,6 @@ export const Header = () => {
               </>
             )}
           </nav>
-        </div>
-
-        {/* Right - Time (desktop only) */}
-        <div className="hidden sm:flex flex-1 items-center justify-end pr-3 text-sm text-zinc-600 dark:text-zinc-400">
-          {display.time && <TimeDisplay timeZone={person.location} />}
         </div>
       </header>
     </>

@@ -61,17 +61,18 @@ const home: Home = {
     display: true,
     title: (
       <div className="flex items-center gap-3">
-        <strong className="ml-4">FYP</strong>
+        <strong className="ml-4">New</strong>
         <span className="w-px h-5 bg-blue-400/50" />
-        <span className="mr-1 text-blue-500">Featured work</span>
+        <span className="mr-1 text-blue-500">Featured Case Study</span>
       </div>
     ),
     href: "/work/solar-panel-segmentation-fyp",
   },
   subline: (
     <>
-      I build AI-powered web applications — from deep learning models to
-      scalable deployment and clean user interfaces.
+      Architecting high-performance web applications and computer vision
+      systems. Specialized in deep learning, Next.js, and scalable cloud
+      infrastructure.
     </>
   ),
 };
@@ -97,28 +98,12 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        I'm a Computer Science undergraduate focused on bridging full-stack
-        software engineering with applied computer vision and machine learning.
-        I build systems — not just notebooks.
-        <br />
-        <br />
-        From training CNNs and self-supervised models to deploying them via APIs
-        and polished frontends, I combine engineering discipline with practical
-        AI.
-        <br />
-        <br />
-        My work includes:
-        <br />
-        Low-Light Image Enhancer built with Flask + MIRNet + React
-        <br />
-        Solar Panel Segmentation (FYP) exploring BYOL and self-supervised
-        learning
-        <br />
-        Enterprise Full-Stack Apps using the MERN stack
-        <br />
-        <br />
-        I'm currently seeking roles where I can build AI-augmented products,
-        deploy models to production, and contribute to real engineering systems.
+        I am a Senior Software Engineer with a specialized focus on Full-Stack
+        Development and Computer Vision. With over a decade of experience, I
+        bridge the gap between complex AI models and user-centric web
+        applications. My expertise spans building scalable distributed systems,
+        training state-of-the-art deep learning models, and crafting intuitive
+        frontend experiences.
       </>
     ),
   },
