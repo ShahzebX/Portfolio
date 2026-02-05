@@ -20,7 +20,7 @@ export default function Home() {
         className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full"
       >
         <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-col gap-2 max-w-xs">
+          <div className="flex flex-col gap-2">
             <h2
               id="projects-heading"
               className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white"
@@ -33,7 +33,7 @@ export default function Home() {
             </p>
           </div>
           <div
-            className="hidden lg:block h-px flex-[3] bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
+            className="hidden lg:block h-px flex-[4] bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
             aria-hidden="true"
           />
         </div>
@@ -70,7 +70,7 @@ export default function Home() {
           className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full"
         >
           <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col gap-2 max-w-xs">
+            <div className="flex flex-col gap-2">
               <h2
                 id="blog-heading"
                 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white"
@@ -83,13 +83,28 @@ export default function Home() {
               </p>
             </div>
             <div
-              className="hidden lg:block h-px flex-[3] bg-gradient-to-r from-zinc-300 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
+              className="hidden lg:block h-px flex-1 bg-gradient-to-r from-zinc-300 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
               aria-hidden="false"
             />
           </div>
           <Posts range={[1, 2]} columns="2" />
         </section>
       )}
+
+      <div className="flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="flex flex-col gap-2 max-w-xs">
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
+            Contact
+          </h2>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            Have a project or question? Get in touch.
+          </p>
+        </div>
+        <div
+          className="hidden lg:block h-px flex-[3] bg-gradient-to-r from-zinc-200 to-transparent dark:from-zinc-700 dark:to-transparent ml-8"
+          aria-hidden="true"
+        />
+      </div>
 
       <div
         id="contact"
