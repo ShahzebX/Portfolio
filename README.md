@@ -58,7 +58,7 @@ npm start
 
 ## Screenshots
 
-![Homepage](public/images/og/home.jpg)
+![Homepage]()
 
 ## Contributing & CI
 
@@ -72,7 +72,7 @@ npm start
 
 ## License
 
-See [LICENSE](LICENSE) in the repo root for license details.
+See [LICENSE]() in the repo root for license details.
 
 ## Deploy
 
