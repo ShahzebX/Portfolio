@@ -6,7 +6,7 @@
 
 This is my personal portfolio built with Next.js and Tailwind CSS. It showcases projects, blog posts, and a professional About/CV page. All UI is custom — no third-party UI kits are required.
 
-![Portfolio screenshot](public/images/og/home.jpg)
+![Portfolio screenshot]()
 
 ## Quickstart
 
