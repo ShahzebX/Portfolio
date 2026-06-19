@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { iconLibrary } from "@/resources/icons";
 import { social } from "@/resources";
@@ -20,9 +20,25 @@ export function ContactForm({ className }: ContactFormProps) {
     subject: "",
     message: "",
   });
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
     setStatus("loading");
 
     try {
@@ -38,9 +54,19 @@ export function ContactForm({ className }: ContactFormProps) {
 
       setStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
+      
+      // Reset status after 3 seconds to allow sending another message
+      timeoutRef.current = setTimeout(() => {
+        setStatus("idle");
+      }, 3000);
     } catch (error) {
       console.error(error);
       setStatus("error");
+      
+      // Reset status after 5 seconds to allow retry
+      timeoutRef.current = setTimeout(() => {
+        setStatus("idle");
+      }, 5000);
     }
   };
 
